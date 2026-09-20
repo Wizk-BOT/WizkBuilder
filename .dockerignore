@@ -1,0 +1,5 @@
+# Keep build context small for GHCR builder image
+.github/
+.git/
+.gitignore
+*.md

@@ -1,0 +1,41 @@
+name: Test builder image
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  test-full:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/wizk-modz/builder:full
+      options: --user builder
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check user and workdir
+        run: |
+          whoami
+          pwd
+          echo $CCACHE_DIR
+      - name: Check toolchains
+        run: |
+          gcc --version
+          clang --version
+          cmake --version
+          ninja --version
+          python3 --version
+          node --version
+          yarn --version
+          go version
+          cargo --version
+          rustc --version
+          java --version
+          mvn --version
+          gradle --version
+          docker --version
+          gh --version
+      - name: Check sudo NOPASSWD
+        run: sudo -n true && echo "sudo OK"
+      - name: Smoke build C
+        run: |
+          echo 'int main(){return 0;}' > /tmp/hello.c
+          gcc /tmp/hello.c -o /tmp/hello && /tmp/hello && echo "C build OK"
